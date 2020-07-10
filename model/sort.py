@@ -7,6 +7,7 @@ class Sort():
     QUICK_SORT = 2
     MERGE_SORT = 3
     INSERTION_SORT = 4
+    HEAP_SORT = 5
 
     def __init__(self, view):
         'ソートを行うオブジェクト生成'
@@ -45,6 +46,10 @@ class Sort():
         elif method == Sort.INSERTION_SORT:
             # 挿入ソートの実行
             self.insertion_sort(self.data)
+
+        elif method == Sort.HEAP_SORT:
+            # 挿入ソートの実行
+            self.heap_sort(self.data)
 
 
         for num in self.data:
@@ -221,4 +226,36 @@ class Sort():
             data[j + 1] = temp
             # 現在のデータの並びを表示
             self.view.draw_data(data)
+
+    def heapify(self, data, i):
+        left = 2 * i + 1  # 左のノード
+        right = 2 * i + 2  # 右のノード
+        size = len(data) - 1
+        min = i  # (i + 1) // 2... すなわち親ノード
+
+        if (left <= size and data[min] > data[left]):  # 親ノードよりも左下子ノードのほうが小さい時
+            min = left  # 左下子ノードのインデックスを親ノードインデックスとして記憶
+            self.compare_num += 1
+
+        if (right <= size and data[min] > data[right]):  # 親ノードよりも右下子ノードのほうが小さい時
+            min = right  # 右下子ノードのインデックスを親ノードインデックスとして記憶
+            self.compare_num += 1
+
+        if min != i:  # 交換が必要な場合
+            data[i], data[min] = data[min], data[i]
+            self.heapify(data, min)  # 交換したらもう一度ヒープ構造をチェックする
+
+    def heap_sort(self,data):
+        for i in reversed(range(len(data) // 2)):  # 根ノードのみを処理する。また、最下層から処理。
+            self.heapify(data, i)  # まず初めにヒープを構成する
+        sorteddata = []
+        for _ in range(len(data)):
+            data[0], data[-1] = data[-1], data[0]  # 最後のノードと先頭のノードを入れ替える
+            sorteddata.append(data.pop())  # 最小ノードを取り出してソート済みの配列に追加する
+            self.heapify(data, 0)  # ヒープを再構成
+            self.view.draw_data(data + sorteddata)
+        print(sorteddata)
+
+
+
 

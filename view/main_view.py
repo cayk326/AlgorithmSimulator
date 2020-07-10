@@ -116,6 +116,16 @@ class View():
         )
         self.insertion_button.pack()
 
+        self.heap_button = tkinter.Radiobutton(
+            self.radio_frame,
+            variable=self.sort,
+            text="Heap Sort",
+            value=sort.Sort.HEAP_SORT
+        )
+        self.heap_button.pack()
+
+
+
         # 開始ボタンの生成と配置
         self.button = tkinter.Button(
             self.operation_frame,
