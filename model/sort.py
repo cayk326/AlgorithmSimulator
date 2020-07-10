@@ -33,7 +33,7 @@ class Sort():
 
         elif method == Sort.QUICK_SORT:
             # クイックソート実行
-            self.quick_sort(0, self.num - 1)
+            self.quick_sort(0, self.num -1)
 
         elif method == Sort.MERGE_SORT:
             # マージソート用のワークメモリを用意
@@ -64,7 +64,7 @@ class Sort():
                     minIdx = j  # 最小値のインデックスを更新
                 self.compare_num += 1
             data[i], data[minIdx] = data[minIdx], data[i]  # 値を入れ変える
-            self.view.draw_data(self.data)
+            self.view.draw_data(data)
 
     def quick_sort(self, left, right):
         'クイックソートを実行'
@@ -181,7 +181,6 @@ class Sort():
         # マージ済みでないデータが残っている集合を、
         # マージ先集合にマージ
         while i <= mid:
-
             # 比較回数をインクリメント
             self.compare_num += 1
 
@@ -190,7 +189,6 @@ class Sort():
             k += 1
 
         while j <= right:
-
             # 比較回数をインクリメント
             self.compare_num += 1
 
