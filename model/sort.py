@@ -7,6 +7,7 @@ class Sort():
     QUICK_SORT = 2
     MERGE_SORT = 3
     INSERTION_SORT = 4
+    HEAP_SORT = 5
 
     def __init__(self, view):
         'ソートを行うオブジェクト生成'
@@ -29,11 +30,11 @@ class Sort():
         # methodに応じてソートを実行
         if method == Sort.SELECTION_SORT:
             # 選択ソート実行
-            self.selection_sort(0, self.num - 1)
+            self.selection_sort(self.data)
 
         elif method == Sort.QUICK_SORT:
             # クイックソート実行
-            self.quick_sort(0, self.num - 1)
+            self.quick_sort(0, self.num -1)
 
         elif method == Sort.MERGE_SORT:
             # マージソート用のワークメモリを用意
@@ -46,6 +47,10 @@ class Sort():
             # 挿入ソートの実行
             self.insertion_sort(self.data)
 
+        elif method == Sort.HEAP_SORT:
+            # 挿入ソートの実行
+            self.heap_sort(self.data)
+
 
         for num in self.data:
             print(num)
@@ -53,43 +58,18 @@ class Sort():
         # 比較回数を返却
         return self.compare_num
 
-    def selection_sort(self, left, right):
+
+    def selection_sort(self, data):
         '選択ソートを実行'
-        start = time.time()
-
-        if left == right:
-            # データ数１つなのでソート終了
-            return
-
-        # 最小値を仮で決定
-        min = self.data[left]
-        i_min = left
-
-        # ソート範囲から最小値を探索
-        for i in range(left, right + 1):
-
-            if min > self.data[i]:
-                # 最小値の更新
-                min = self.data[i]
-                i_min = i
-
-            # 比較回数をインクリメント
-            self.compare_num += 1
-
-        # 最小値と左端のデータを交換
-        if i_min != left:
-            # 交換必要な場合のみ交換
-            tmp = self.data[left]
-            self.data[left] = self.data[i_min]
-            self.data[i_min] = tmp
-
-        # 現在のデータの並びを表示
-        self.view.draw_data(self.data)
-
-        # 範囲を狭めて再度選択ソート
-        self.selection_sort(left + 1, right)
-        
-        self.elapsed_time = time.time() - start
+        print('Execute selection sort')
+        for i in range(len(data)):
+            minIdx = i  # 最小値の位置をセットする
+            for j in range(i + 1, len(data)):  # 比較対象のインデックスの隣から探索開始
+                if data[minIdx] > data[j]:  # 最小値と仮定している数字よりも小さい数を見つけた場合
+                    minIdx = j  # 最小値のインデックスを更新
+                self.compare_num += 1
+            data[i], data[minIdx] = data[minIdx], data[i]  # 値を入れ変える
+            self.view.draw_data(data)
 
     def quick_sort(self, left, right):
         'クイックソートを実行'
@@ -206,7 +186,6 @@ class Sort():
         # マージ済みでないデータが残っている集合を、
         # マージ先集合にマージ
         while i <= mid:
-
             # 比較回数をインクリメント
             self.compare_num += 1
 
@@ -215,7 +194,6 @@ class Sort():
             k += 1
 
         while j <= right:
-
             # 比較回数をインクリメント
             self.compare_num += 1
 
@@ -244,7 +222,40 @@ class Sort():
                 '''
                 data[j + 1] = data[j]  # 要素を一つ後ろにずらす
                 j -= 1
+                self.compare_num += 1
             data[j + 1] = temp
             # 現在のデータの並びを表示
             self.view.draw_data(data)
+
+    def heapify(self, data, i):
+        left = 2 * i + 1  # 左のノード
+        right = 2 * i + 2  # 右のノード
+        size = len(data) - 1
+        min = i  # (i + 1) // 2... すなわち親ノード
+
+        if (left <= size and data[min] > data[left]):  # 親ノードよりも左下子ノードのほうが小さい時
+            min = left  # 左下子ノードのインデックスを親ノードインデックスとして記憶
+            self.compare_num += 1
+
+        if (right <= size and data[min] > data[right]):  # 親ノードよりも右下子ノードのほうが小さい時
+            min = right  # 右下子ノードのインデックスを親ノードインデックスとして記憶
+            self.compare_num += 1
+
+        if min != i:  # 交換が必要な場合
+            data[i], data[min] = data[min], data[i]
+            self.heapify(data, min)  # 交換したらもう一度ヒープ構造をチェックする
+
+    def heap_sort(self,data):
+        for i in reversed(range(len(data) // 2)):  # 根ノードのみを処理する。また、最下層から処理。
+            self.heapify(data, i)  # まず初めにヒープを構成する
+        sorteddata = []
+        for _ in range(len(data)):
+            data[0], data[-1] = data[-1], data[0]  # 最後のノードと先頭のノードを入れ替える
+            sorteddata.append(data.pop())  # 最小ノードを取り出してソート済みの配列に追加する
+            self.heapify(data, 0)  # ヒープを再構成
+            self.view.draw_data(data + sorteddata)
+        print(sorteddata)
+
+
+
 
