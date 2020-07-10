@@ -15,6 +15,9 @@ class View():
         self.canvas_width = general_setting.CANVAS_WIDTH
         self.canvas_height = general_setting.CANVAS_HEIGHT
 
+        #エラー処理用メッセージ
+        self.message = ''
+
         # 情報表示用のフレームを作成
         self.canvas_frame = tkinter.Frame(
             master,
@@ -37,7 +40,7 @@ class View():
 
         # ラベルの生成と配置
         self.text = tkinter.StringVar()
-        self.text.set("開始ボタンを押してね")
+        self.text.set("Please press Start button")
 
         self.label = tkinter.Label(
             self.canvas_frame,
@@ -48,14 +51,18 @@ class View():
         # テキストボックス配置用のフレームの生成と配置
         max_w = self.canvas_width // 2
         max_h = self.canvas_height // 2
+
+        # データ数が画面サイズに収まるようにコントロール
+        # キャンバスの幅 / 2 or キャンバスの高さ / 2の小さいほうを選択
         if max_w < max_h:
             max = max_w
         else:
             max = max_h
 
+
         self.text_frame = tkinter.LabelFrame(
             self.operation_frame,
-            text="データ数（最大" + str(max) + "）"
+            text="Number of data（Max" + str(max) + "）"
         )
         self.text_frame.pack(ipadx=10, pady=10)
 
@@ -68,7 +75,7 @@ class View():
         # ラジオボタン配置用のフレームの生成と配置
         self.radio_frame = tkinter.LabelFrame(
             self.operation_frame,
-            text="アルゴリズム"
+            text="Algorithm"
         )
         self.radio_frame.pack(ipadx=10, pady=10)
 
@@ -80,7 +87,7 @@ class View():
         self.selection_button = tkinter.Radiobutton(
             self.radio_frame,
             variable=self.sort,
-            text="選択ソート",
+            text="Selection Sort",
             value=sort.Sort.SELECTION_SORT
         )
         self.selection_button.pack()
@@ -88,7 +95,7 @@ class View():
         self.quick_button = tkinter.Radiobutton(
             self.radio_frame,
             variable=self.sort,
-            text="クイックソート",
+            text="Quick Sort",
             value=sort.Sort.QUICK_SORT
         )
         self.quick_button.pack()
@@ -96,15 +103,23 @@ class View():
         self.merge_button = tkinter.Radiobutton(
             self.radio_frame,
             variable=self.sort,
-            text="マージソート",
+            text="Merge Sort",
             value=sort.Sort.MERGE_SORT
         )
         self.merge_button.pack()
 
+        self.insertion_button = tkinter.Radiobutton(
+            self.radio_frame,
+            variable=self.sort,
+            text="Insertion Sort",
+            value=sort.Sort.INSERTION_SORT
+        )
+        self.insertion_button.pack()
+
         # 開始ボタンの生成と配置
         self.button = tkinter.Button(
             self.operation_frame,
-            text="開始",
+            text="Start",
         )
         self.button.pack()
 
@@ -150,7 +165,7 @@ class View():
             int(self.offset_x + self.line_width * self.num),
             int(self.offset_y + self.line_height * self.num),
             width=0,
-            fill="#EEEEFF",
+            fill="#000000",
             tag="background"
         )
 
@@ -201,7 +216,7 @@ class View():
                 x1, y1,
                 x2, y2,
                 tag=tag,
-                fill="#FFA588",
+                fill="#CC0000",
                 width=1
             )
 

@@ -1,14 +1,18 @@
+import time
+
 class Sort():
 
     # ソート種類
     SELECTION_SORT = 1
     QUICK_SORT = 2
     MERGE_SORT = 3
+    INSERTION_SORT = 4
 
     def __init__(self, view):
         'ソートを行うオブジェクト生成'
 
         self.view = view
+        self.elapsed_time = 0
 
     def start(self, data, method):
         'ソートを開始'
@@ -38,6 +42,11 @@ class Sort():
             # マージソート実行
             self.merge_sort(0, self.num - 1)
 
+        elif method == Sort.INSERTION_SORT:
+            # 挿入ソートの実行
+            self.insertion_sort(self.data)
+
+
         for num in self.data:
             print(num)
 
@@ -46,6 +55,7 @@ class Sort():
 
     def selection_sort(self, left, right):
         '選択ソートを実行'
+        start = time.time()
 
         if left == right:
             # データ数１つなのでソート終了
@@ -78,6 +88,8 @@ class Sort():
 
         # 範囲を狭めて再度選択ソート
         self.selection_sort(left + 1, right)
+        
+        self.elapsed_time = time.time() - start
 
     def quick_sort(self, left, right):
         'クイックソートを実行'
@@ -216,3 +228,23 @@ class Sort():
         for i in range(left, right + 1):
             self.data[i] = self.work[j]
             j += 1
+
+    def insertion_sort(self,data):
+        print('Execute insertion sort')
+        for i in range(1, len(data)):
+            temp = data[i]  # 配列の左端のデータをソート済みとみなし、ソート開始位置の数をtempに記憶
+            j = i - 1  # ソート済みの配列の右端のインデックスを抽出
+            while (j >= 0 and data[j] > temp):
+                '''
+                このwhile文では
+                1. インデックスIを境に左側がソート済み配列、右側がソート対象配列になる
+                2. ソートが終わったとみなしている配列をインデックスJをデクリメントしつつ、インデックスiの値と比較
+                3. もし2でdata[j] > data[i]を満たせば、場所を交換する。
+                4. そのとき、data[j]を一つ後ろ、すなわちdata[j + 1]に移して、jをデクリメントしてから値をスワップする
+                '''
+                data[j + 1] = data[j]  # 要素を一つ後ろにずらす
+                j -= 1
+            data[j + 1] = temp
+            # 現在のデータの並びを表示
+            self.view.draw_data(data)
+
