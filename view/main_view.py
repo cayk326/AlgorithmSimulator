@@ -83,7 +83,7 @@ class View():
         self.sort = tkinter.IntVar()
         self.sort.set(sort.Sort.QUICK_SORT)
 
-        # アルゴリズム選択用のラジオボタンを３つ作成し配置
+        # アルゴリズム選択用のラジオボタンを作成し配置
         self.selection_button = tkinter.Radiobutton(
             self.radio_frame,
             variable=self.sort,
@@ -126,7 +126,7 @@ class View():
 
 
 
-        # 開始ボタンの生成と配置
+       # 開始ボタンの生成と配置
         self.button = tkinter.Button(
             self.operation_frame,
             text="Start",
