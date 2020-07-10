@@ -29,7 +29,7 @@ class Sort():
         # methodに応じてソートを実行
         if method == Sort.SELECTION_SORT:
             # 選択ソート実行
-            self.selection_sort(0, self.num - 1)
+            self.selection_sort(self.data)
 
         elif method == Sort.QUICK_SORT:
             # クイックソート実行
@@ -53,43 +53,18 @@ class Sort():
         # 比較回数を返却
         return self.compare_num
 
-    def selection_sort(self, left, right):
+
+    def selection_sort(self, data):
         '選択ソートを実行'
-        start = time.time()
-
-        if left == right:
-            # データ数１つなのでソート終了
-            return
-
-        # 最小値を仮で決定
-        min = self.data[left]
-        i_min = left
-
-        # ソート範囲から最小値を探索
-        for i in range(left, right + 1):
-
-            if min > self.data[i]:
-                # 最小値の更新
-                min = self.data[i]
-                i_min = i
-
-            # 比較回数をインクリメント
-            self.compare_num += 1
-
-        # 最小値と左端のデータを交換
-        if i_min != left:
-            # 交換必要な場合のみ交換
-            tmp = self.data[left]
-            self.data[left] = self.data[i_min]
-            self.data[i_min] = tmp
-
-        # 現在のデータの並びを表示
-        self.view.draw_data(self.data)
-
-        # 範囲を狭めて再度選択ソート
-        self.selection_sort(left + 1, right)
-        
-        self.elapsed_time = time.time() - start
+        print('Execute selection sort')
+        for i in range(len(data)):
+            minIdx = i  # 最小値の位置をセットする
+            for j in range(i + 1, len(data)):  # 比較対象のインデックスの隣から探索開始
+                if data[minIdx] > data[j]:  # 最小値と仮定している数字よりも小さい数を見つけた場合
+                    minIdx = j  # 最小値のインデックスを更新
+                self.compare_num += 1
+            data[i], data[minIdx] = data[minIdx], data[i]  # 値を入れ変える
+            self.view.draw_data(self.data)
 
     def quick_sort(self, left, right):
         'クイックソートを実行'
@@ -244,6 +219,7 @@ class Sort():
                 '''
                 data[j + 1] = data[j]  # 要素を一つ後ろにずらす
                 j -= 1
+                self.compare_num += 1
             data[j + 1] = temp
             # 現在のデータの並びを表示
             self.view.draw_data(data)
